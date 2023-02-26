@@ -1,22 +1,28 @@
 {
   "dependencies": {
+    "@expo-google-fonts/playfair-display-sc": "^0.2.3",
+    "@expo/webpack-config": "^0.17.2",
     "expo": "^47.0.0",
+    "expo-font": "~11.0.1",
     "react": "18.1.0",
     "react-dom": "18.1.0",
     "react-native": "0.70.5",
-    "react-native-web": "~0.18.7"
+    "react-native-web": "~0.18.7",
+    "worker-functions": "^0.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.19.3",
     "@types/react": "~18.0.24",
     "@types/react-native": "~0.70.6",
-    "typescript": "^4.6.3"
+    "typescript": "^4.6.3",
+    "wrangler": "^2.11.1"
   },
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "dev:worker": "npx wrangler --experimental-json-config dev --experimental-local"
   },
   "version": "1.0.0",
   "private": true,
