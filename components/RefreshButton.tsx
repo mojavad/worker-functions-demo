@@ -1,9 +1,17 @@
 import { StyleSheet, Text, View } from "react-native";
 import { Pressable } from "./Pressable";
 
-export const RefreshButton = ({ callback }: { callback: () => void }) => (
+export const GenericButton = ({
+  callback,
+  text,
+  disabled,
+}: {
+  callback: () => void;
+  text: string;
+  disabled: boolean;
+}) => (
   <>
-    <Pressable onPress={callback}>
+    <Pressable onPress={callback} disabled={disabled}>
       <View
         style={{
           borderRadius: 5,
@@ -16,7 +24,7 @@ export const RefreshButton = ({ callback }: { callback: () => void }) => (
           marginTop: 16,
         }}
       >
-        <Text style={styles.text}>Refresh</Text>
+        <Text style={styles.text}>{text}</Text>
       </View>
     </Pressable>
   </>

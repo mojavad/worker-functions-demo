@@ -5,15 +5,18 @@ import { Pressable } from "./Pressable";
 export const VoteButton = ({
   isPositive,
   callback,
+  disabled,
 }: {
   isPositive: boolean;
   callback: (isPositive: boolean) => void;
+  disabled: boolean;
 }) => (
   <>
     <Pressable
       onPress={() => {
         callback(isPositive);
       }}
+      disabled={disabled}
     >
       <View
         style={{

@@ -10,7 +10,7 @@ import { VoteButton } from "./components/VoteButton";
 import { WorkerClient } from "worker-functions";
 import { useCallback, useEffect, useState } from "react";
 import { WorkerTypeFns } from "worker-functions/generated-client/type-gen";
-import { RefreshButton } from "./components/RefreshButton";
+import { GenericButton } from "./components/RefreshButton";
 
 export const worker = WorkerClient("http://192.168.1.62:8787");
 
@@ -27,41 +27,51 @@ export default function App() {
     ReturnType<WorkerTypeFns["vote"]>
   > | null>(null);
 
+  const [disabled, setDisabled] = useState(true);
+
   const vote = useCallback(
-    (isPositive: boolean) => {
-      const vote = async () => {
-        const data = await worker.vote(tweet?.id, isPositive);
-        setVoteResults(data);
-      };
-      vote();
+    async (isPositive: boolean) => {
+      setDisabled(true);
+      getTotal();
+      const data = await worker.vote(tweet?.id, isPositive);
+      setVoteResults(data);
+      setDisabled(false);
     },
     [setVoteResults, tweet]
   );
 
-  worker.no;
+  // const voteRandom = useCallback(async () => {
+  //   setDisabled(true);
+  //   getTotal();
+  //   const data = await worker.randomVote(tweet?.id);
+  //   setVoteResults(data);
+  //   setDisabled(false);
+  // }, [setVoteResults, tweet]);
 
   const refreshTweet = useCallback(async () => {
+    setDisabled(true);
     const data = await worker.getRandomTweet();
     setTweet(data);
     setVoteResults(null);
+    setDisabled(false);
   }, [setTweet, setVoteResults]);
+
+  const getTotal = useCallback(async () => {
+    const data = await worker.getTotalVotes();
+    setTotalVotes(data);
+  }, [setTotalVotes]);
 
   useEffect(() => {
     refreshTweet();
   }, [refreshTweet]);
 
   useEffect(() => {
-    const getTotal = async () => {
-      const data = await worker.getTotalVotes();
-      setTotalVotes(data);
-    };
     getTotal();
     const interval = setInterval(getTotal, 5000);
 
     return () => clearInterval(interval);
-  }, [setTotalVotes]);
+  }, [getTotal]);
 
-  console.log(voteResults);
   const voteProportions = voteResults
     ? voteResults.correct / (voteResults.correct + voteResults.incorrect)
     : null;
@@ -87,16 +97,32 @@ export default function App() {
       <TweetBox tweet={tweet?.content} timestamp={tweet?.timestamp} />
 
       {voteResults === null ? (
-        <View style={{ flexDirection: "row" }}>
-          <VoteButton isPositive={true} callback={vote} />
-          <VoteButton isPositive={false} callback={vote} />
-        </View>
+        <>
+          <View style={{ flexDirection: "row" }}>
+            <VoteButton isPositive={true} callback={vote} disabled={disabled} />
+            <VoteButton
+              isPositive={false}
+              callback={vote}
+              disabled={disabled}
+            />
+          </View>
+          {/* <GenericButton
+            text={"I'm feelin' lucky!"}
+            callback={voteRandom}
+            disabled={disabled}
+          /> */}
+        </>
       ) : (
         <>
           <Text style={{ fontFamily: "PlayfairDisplaySC_700Bold" }}>
             {voteResults.userVote === !!voteResults.isTrump
               ? "You guessed correctly! 🎉"
               : "Sorry, wrong guess. 👎"}
+          </Text>
+          <Text style={{ fontFamily: "PlayfairDisplaySC_700Bold" }}>
+            {!!voteResults.isTrump
+              ? `This was the Donald.`
+              : `The Donald wouldn't say that!`}
           </Text>
           <Text
             style={{
@@ -108,7 +134,11 @@ export default function App() {
               voteProportions * 100
             )}% of users guessed correctly.`}
           </Text>
-          <RefreshButton callback={refreshTweet} />
+          <GenericButton
+            text="Refresh"
+            callback={refreshTweet}
+            disabled={disabled}
+          />
         </>
       )}
       <View style={{ marginTop: 100 }}>
