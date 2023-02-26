@@ -10,6 +10,7 @@ import { VoteButton } from "./components/VoteButton";
 import { WorkerClient } from "worker-functions";
 import { useCallback, useEffect, useState } from "react";
 import { WorkerTypeFns } from "worker-functions/generated-client/type-gen";
+import { RefreshButton } from "./components/RefreshButton";
 
 export const worker = WorkerClient("http://192.168.1.62:8787");
 
@@ -26,13 +27,28 @@ export default function App() {
     ReturnType<WorkerTypeFns["vote"]>
   > | null>(null);
 
+  const vote = useCallback(
+    (isPositive: boolean) => {
+      const vote = async () => {
+        const data = await worker.vote(tweet?.id, isPositive);
+        setVoteResults(data);
+      };
+      vote();
+    },
+    [setVoteResults, tweet]
+  );
+
+  worker.no;
+
+  const refreshTweet = useCallback(async () => {
+    const data = await worker.getRandomTweet();
+    setTweet(data);
+    setVoteResults(null);
+  }, [setTweet, setVoteResults]);
+
   useEffect(() => {
-    const getTweet = async () => {
-      const data = await worker.getRandomTweet();
-      setTweet(data);
-    };
-    getTweet();
-  }, [setTweet]);
+    refreshTweet();
+  }, [refreshTweet]);
 
   useEffect(() => {
     const getTotal = async () => {
@@ -45,19 +61,9 @@ export default function App() {
     return () => clearInterval(interval);
   }, [setTotalVotes]);
 
-  const vote = useCallback(
-    (isPositive: boolean) => {
-      const vote = async () => {
-        const data = await worker.vote(tweet?.id, isPositive);
-        setVoteResults(data);
-      };
-      vote();
-    },
-    [setVoteResults, tweet]
-  );
-
+  console.log(voteResults);
   const voteProportions = voteResults
-    ? voteResults.correctVotes / voteResults.total
+    ? voteResults.correct / (voteResults.correct + voteResults.incorrect)
     : null;
   const resultColor =
     voteProportions > 0.75
@@ -78,7 +84,7 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Header />
-      <TweetBox tweet={tweet?.tweet} timestamp={tweet?.timestamp} />
+      <TweetBox tweet={tweet?.content} timestamp={tweet?.timestamp} />
 
       {voteResults === null ? (
         <View style={{ flexDirection: "row" }}>
@@ -88,7 +94,7 @@ export default function App() {
       ) : (
         <>
           <Text style={{ fontFamily: "PlayfairDisplaySC_700Bold" }}>
-            {voteResults.userVote === voteResults.isTrump
+            {voteResults.userVote === !!voteResults.isTrump
               ? "You guessed correctly! 🎉"
               : "Sorry, wrong guess. 👎"}
           </Text>
@@ -102,6 +108,7 @@ export default function App() {
               voteProportions * 100
             )}% of users guessed correctly.`}
           </Text>
+          <RefreshButton callback={refreshTweet} />
         </>
       )}
       <View style={{ marginTop: 100 }}>

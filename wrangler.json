@@ -4,5 +4,12 @@
   "main": "node_modules/worker-functions/generated-worker/index.ts",
   "build": {
     "command": "npx worker-functions"
-  }
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "trump-or-not",
+      "database_id": "b7eb93e9-5bce-4e9e-853f-7997b411a9a8"
+    }
+  ]
 }

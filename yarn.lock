@@ -1090,6 +1090,11 @@
   dependencies:
     mime "^3.0.0"
 
+"@cloudflare/workers-types@^4.20230221.0":
+  version "4.20230221.0"
+  resolved "https://registry.yarnpkg.com/@cloudflare/workers-types/-/workers-types-4.20230221.0.tgz#d0cca6d1100f5aaf4550db23011a5dc9687a2ef3"
+  integrity sha512-Ge8csuFQMNv3hd8r85PFWv4KV6bHAtKoBaanTkjbbeJS+mizoiBn4OBva0CFQiGfRJklFSGd4OxuCuiK05kogg==
+
 "@esbuild-plugins/node-globals-polyfill@^0.1.1":
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/@esbuild-plugins/node-globals-polyfill/-/node-globals-polyfill-0.1.1.tgz#a313ab3efbb2c17c8ce376aa216c627c9b40f9d7"
@@ -11043,10 +11048,10 @@ worker-farm@^1.7.0:
   dependencies:
     errno "~0.1.7"
 
-worker-functions@^0.4.0:
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/worker-functions/-/worker-functions-0.4.0.tgz#930ab2efebe74e32394560e70ed6e767424f4e4d"
-  integrity sha512-qF1fCx/UXWs21HCJ/7u2yHDxI+7X/IutAxPqPfhpijHOGk22u/v8yGw2YMQg3AU76rNXIPWTvaeUtuwyadxLdQ==
+worker-functions@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/worker-functions/-/worker-functions-0.5.0.tgz#8847e27fc189b70fd2093b8131cd6484fdf78b50"
+  integrity sha512-qHIpwAjvU6wn2wIRMyOzADSGdWSSYDfTQ3O8wicwCIbFtkuScKjrIXR0Wo6lj43MuMut/gJdFNEbNVhYKQWJ0w==
   dependencies:
     cross-fetch "^3.1.5"
 
